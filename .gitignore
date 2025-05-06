@@ -35,7 +35,7 @@ instance/
 .webassets-cache
 
 # JSON data files
-app/data/*.json
+# app/data/*.json
 
 # Uploaded files
 app/static/uploads/ 

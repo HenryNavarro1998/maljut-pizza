@@ -29,12 +29,12 @@ def create_app(config_class=Config):
     # Registrar filtros personalizados
     app.jinja_env.filters['nl2br'] = nl2br
     
-    # Crear usuario administrador al iniciar
-    with app.app_context():
-        user_model = User()
-        admin = user_model.get_by_username('admin')
-        if not admin:
-            user_model.create(username='admin', password='Admin123', role='admin')
+    # # Crear usuario administrador al iniciar
+    # with app.app_context():
+    #     user_model = User()
+    #     admin = user_model.get_by_username('admin')
+    #     if not admin:
+    #         user_model.create(username='admin', password='Admin123', role='admin')
 
     from app.routes import main, auth, inventory, recipes, users, sales
     app.register_blueprint(main.bp)
