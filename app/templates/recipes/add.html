@@ -1,0 +1,171 @@
+{% extends "base.html" %} {% block title %}Nueva Receta{% endblock %} {% block
+content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0">Nueva Receta</h4>
+      </div>
+      <div class="card-body">
+        <form
+          method="POST"
+          action="{{ url_for('recipes.add') }}"
+          id="addRecipeForm"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre de la Receta</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="instructions" class="form-label">Instrucciones</label>
+            <textarea
+              class="form-control"
+              id="instructions"
+              name="instructions"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Imagen de la Receta</label>
+            <input
+              type="file"
+              class="form-control"
+              id="image"
+              name="image"
+              accept="image/*"
+            />
+            <small class="text-muted"
+              >Formatos permitidos: PNG, JPG, JPEG, GIF</small
+            >
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Ingredientes</label>
+            <div id="ingredients-container">
+              <div class="row mb-2 ingredient-row">
+                <div class="col-md-6">
+                  <select class="form-select" name="ingredients[]" required>
+                    <option value="">Seleccionar ingrediente</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}">
+                      {{ product.name }} ({{ product.unit }})
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="quantities[]"
+                    placeholder="Cantidad"
+                    required
+                  />
+                </div>
+                <div class="col-md-2">
+                  <button
+                    type="button"
+                    class="btn btn-danger remove-ingredient"
+                    disabled
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-secondary mt-2"
+              id="add-ingredient"
+            >
+              <i class="fas fa-plus"></i> Agregar Ingrediente
+            </button>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Crear Receta</button>
+            <a href="{{ url_for('recipes.index') }}" class="btn btn-secondary"
+              >Cancelar</a
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("ingredients-container");
+    const addButton = document.getElementById("add-ingredient");
+
+    // Función para agregar nuevo ingrediente
+    function addIngredient() {
+      const template = document
+        .querySelector(".ingredient-row")
+        .cloneNode(true);
+      template
+        .querySelectorAll("input, select")
+        .forEach((input) => (input.value = ""));
+      template.querySelector(".remove-ingredient").disabled = false;
+      container.appendChild(template);
+
+      // Agregar evento al nuevo botón de eliminar
+      template
+        .querySelector(".remove-ingredient")
+        .addEventListener("click", function () {
+          if (container.children.length > 1) {
+            template.remove();
+          }
+        });
+    }
+
+    // Agregar evento al botón de agregar ingrediente
+    addButton.addEventListener("click", addIngredient);
+
+    // Validar formulario antes de enviar
+    document
+      .getElementById("addRecipeForm")
+      .addEventListener("submit", function (e) {
+        const ingredients = document.getElementsByName("ingredients[]");
+        const quantities = document.getElementsByName("quantities[]");
+        let isValid = true;
+
+        for (let i = 0; i < ingredients.length; i++) {
+          if (!ingredients[i].value || !quantities[i].value) {
+            isValid = false;
+            break;
+          }
+        }
+
+        if (!isValid) {
+          e.preventDefault();
+          alert(
+            "Por favor, complete todos los campos de ingredientes o elimine las filas vacías."
+          );
+        }
+      });
+  });
+</script>
+{% endblock %}

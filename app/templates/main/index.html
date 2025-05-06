@@ -1,0 +1,161 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+<div class="container mt-4">
+  <h1 class="page-title">Dashboard</h1>
+
+  <!-- Dashboard de Inventario -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header">
+      <i class="fas fa-boxes me-2"></i>Gestión de Inventario
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm text-center mb-2">
+            <div class="card-body">
+              <h3 class="display-6 fw-bold" style="color: var(--maljut-blue)">
+                {{ total_products }}
+              </h3>
+              <div class="text-muted">Total de Productos</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm text-center mb-2">
+            <div class="card-body">
+              <h3 class="display-6 fw-bold" style="color: #e6b800">
+                {{ total_low_stock }}
+              </h3>
+              <div class="text-muted">Stock Bajo</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+          <a
+            href="{{ url_for('inventory.index') }}"
+            class="btn btn-primary px-4 py-2 fw-bold"
+          >
+            <i class="fas fa-arrow-right"></i> Ver Inventario
+          </a>
+        </div>
+      </div>
+      {% if low_stock_products %}
+      <div class="mt-4">
+        <h6 class="fw-bold" style="color: #e6b800">Productos con Stock Bajo</h6>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Stock Actual</th>
+                <th>Stock Mínimo</th>
+                <th>Unidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in low_stock_products %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.min_quantity }}</td>
+                <td>{{ product.unit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Dashboard de Recetas -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header"><i class="fas fa-utensils me-2"></i>Recetas</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm text-center mb-2">
+            <div class="card-body">
+              <h3 class="display-6 fw-bold" style="color: var(--maljut-blue)">
+                {{ total_recipes }}
+              </h3>
+              <div class="text-muted">Total de Recetas</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm text-center mb-2">
+            <div class="card-body">
+              <h3 class="display-6 fw-bold" style="color: var(--maljut-blue)">
+                {{ total_recipes_with_ingredients }}
+              </h3>
+              <div class="text-muted">Recetas con Ingredientes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <a
+          href="{{ url_for('recipes.index') }}"
+          class="btn btn-primary px-4 py-2 fw-bold"
+        >
+          <i class="fas fa-arrow-right"></i> Ver Recetas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard de Reportes -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header"><i class="fas fa-chart-bar me-2"></i>Reportes</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm text-center mb-2">
+            <div class="card-body">
+              <h3 class="display-6 fw-bold" style="color: var(--maljut-blue)">
+                {{ total_sales }}
+              </h3>
+              <div class="text-muted">Ventas del Último Mes</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+          <a
+            href="{{ url_for('sales.history') }}"
+            class="btn btn-primary px-4 py-2 fw-bold"
+          >
+            <i class="fas fa-history"></i> Ver Historial de Ventas
+          </a>
+        </div>
+      </div>
+      {% if top_recipes %}
+      <div class="mt-4">
+        <h6 class="fw-bold" style="color: var(--maljut-blue)">
+          Recetas Más Vendidas
+        </h6>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Receta</th>
+                <th>Cantidad Vendida</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for recipe in top_recipes %}
+              <tr>
+                <td>{{ recipe.name }}</td>
+                <td>{{ recipe.quantity }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

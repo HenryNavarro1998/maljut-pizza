@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h1>Stock Insuficiente</h1>
+
+  <div class="alert alert-warning">
+    No hay suficiente stock para procesar la venta de {{ quantity }} {{
+    recipe.name }}.
+  </div>
+
+  <h3>Productos con stock insuficiente:</h3>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad Requerida</th>
+          <th>Stock Disponible</th>
+          <th>Faltante</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in insufficient_products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.required }}</td>
+          <td>{{ product.available }}</td>
+          <td>{{ product.required - product.available }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <a href="{{ url_for('sales.index') }}" class="btn btn-primary">Volver</a>
+  </div>
+</div>
+{% endblock %}

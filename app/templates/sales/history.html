@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block title %}Historial de Ventas{% endblock %} {%
+block content %}
+<div class="container mt-4">
+  <h1 class="page-title">Historial de Ventas</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ url_for('sales.index') }}" class="btn btn-primary">
+      <i class="fas fa-arrow-left"></i> Volver a Ventas
+    </a>
+  </div>
+
+  <!-- Filtro de fechas -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="GET" class="row g-3">
+        <div class="col-md-4">
+          <label for="start_date" class="form-label">Fecha Inicio</label>
+          <input
+            type="date"
+            class="form-control"
+            id="start_date"
+            name="start_date"
+            value="{{ start_date }}"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="end_date" class="form-label">Fecha Fin</label>
+          <input
+            type="date"
+            class="form-control"
+            id="end_date"
+            name="end_date"
+            value="{{ end_date }}"
+          />
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter"></i> Filtrar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total de Ventas</h5>
+          <p class="card-text display-6">{{ total_sales }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de ventas -->
+  {% if sales %}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Receta</th>
+          <th>Cantidad</th>
+          <th>Ingredientes Utilizados</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sale in sales %}
+        <tr>
+          <td>{{ sale.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>{{ sale.recipe_name }}</td>
+          <td>{{ sale.quantity }}</td>
+          <td>
+            <ul class="list-unstyled mb-0">
+              {% for ingredient in sale.ingredients_used %}
+              <li>
+                {{ ingredient.quantity_used }} {{ ingredient.unit }} de {{
+                ingredient.product_name }}
+              </li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">
+    No hay ventas registradas en el período seleccionado.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
